@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compario - Upload Image</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root{
+            --accent:#42a5f5;
+            --card:#fff;
+            --muted:#666;
+            --green:#43a047;
+            --best-bg:#e8f5e9;
+        }
+
+        body{
+            margin:0;
+            padding:0;
+            font-family:"Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(135deg,#7e57c2,#42a5f5);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            padding:30px 12px;
+            box-sizing:border-box;
+        }
+
+        .container{
+            width:100%;
+            max-width:520px;
+            background:var(--card);
+            border-radius:12px;
+            padding:26px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        h1{
+            text-align:center;
+            margin:0 0 8px;
+            font-size:28px;
+            color:#333;
+        }
+
+        p.lead{
+            text-align:center;
+            color:var(--muted);
+            margin:0 0 18px;
+        }
+
+        form{
+            text-align:center;
+        }
+
+        .upload-text{
+            display:block;
+            border:2px dashed #ddd;
+            padding:18px;
+            border-radius:10px;
+            cursor:pointer;
+            color:#444;
+        }
+
+        input[type=file]{
+            display:none;
+        }
+
+        input[type=text]{
+            width:100%;
+            padding:10px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            margin-top:14px;
+            box-sizing:border-box;
+        }
+
+        .btn{
+            margin-top:14px;
+            padding:10px 18px;
+            background:var(--accent);
+            color:#fff;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            width:100%;
+        }
+
+        .prediction-box{
+            margin-top:22px;
+            background:var(--best-bg);
+            border-left:6px solid var(--green);
+            padding:14px;
+            border-radius:8px;
+            text-align:center;
+            font-weight:600;
+        }
+
+        .prediction-box small{
+            display:block;
+            margin-top:6px;
+            font-weight:400;
+            color:#2e7d32;
+        }
+
+        .preview{
+            display:flex;
+            justify-content:center;
+            margin-top:16px;
+        }
+
+        .preview img{
+            width:260px;
+            border-radius:12px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .prices{
+            margin-top:22px;
+            display:grid;
+            grid-template-columns:1fr;
+            gap:12px;
+        }
+
+        .price-card{
+            position:relative;
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:12px;
+            border-radius:10px;
+            background:#fafafa;
+            box-shadow:0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .store-logo{
+            width:56px;
+            height:36px;
+            border-radius:6px;
+            background:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+        }
+
+        .price-info{
+            flex:1;
+        }
+
+        .price{
+            font-weight:700;
+            font-size:18px;
+        }
+
+        .buy{
+            text-decoration:none;
+            padding:8px 12px;
+            background:var(--accent);
+            color:#fff;
+            border-radius:8px;
+        }
+
+        .best{
+            border:2px solid rgba(67,160,71,0.2);
+            background: linear-gradient(90deg,#f1fbf3,#fff);
+        }
+
+        .best .price{
+            color:var(--green);
+        }
+
+        .best-badge{
+            position:absolute;
+            top:-8px;
+            right:-8px;
+            background:#43a047;
+            color:#fff;
+            font-size:12px;
+            padding:4px 10px;
+            border-radius:14px;
+            font-weight:600;
+        }
+
+        @media (min-width:700px){
+            .prices{
+                grid-template-columns:1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Compario</h1>
+    <p class="lead">Upload image → recognize brand → enter model → compare prices</p>
+
+    <!-- STEP 1: Upload image -->
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <label class="upload-text" for="imageInput">
+            <strong>Click to choose image</strong>
+        </label>
+
+        <input type="file" id="imageInput" name="image" accept="image/*" required>
+        <button class="btn" type="submit">Recognize Product</button>
+    </form>
+
+    {% if label %}
+        <div class="prediction-box">
+            Predicted Brand: <strong>{{ label }}</strong> 
+        </div>
+
+        <div class="preview">
+            <img src="{{ image_url }}">
+        </div>
+
+        <!-- STEP 2: Enter model -->
+        <form action="/" method="POST" style="margin-top:18px;">
+            <input type="hidden" name="brand" value="{{ label }}">
+            <input type="hidden" name="image_url" value="{{ image_url }}">
+            <input type="text"
+                   name="model_name"
+                   placeholder="Enter model (e.g. Galaxy M34, iPhone 14)"
+                   required>
+
+            <button class="btn" type="submit">Compare Prices</button>
+        </form>
+    {% endif %}
+
+    {% if prices %}
+        <h3 style="text-align:center;margin-top:20px;">Live Price Comparison</h3>
+
+        <div class="prices">
+            {% for p in prices %}
+            {% set is_best = (best_store and p.price_value == best_store.price_value) %}
+            <div class="price-card {% if is_best %}best{% endif %}">
+                {% if is_best %}
+                    <span class="best-badge">Lowest Price</span>
+                {% endif %}
+
+                <div class="store-logo">{{ p.store }}</div>
+
+                <div class="price-info">
+                    <div><strong>{{ p.store }}</strong></div>
+                    <div class="price">₹{{ p.price_value }}</div>
+                </div>
+
+                <a href="{{ p.link }}" target="_blank" class="buy">Buy</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

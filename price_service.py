@@ -1,3 +1,4 @@
+from email.mime import text
 from statistics import median
 import requests
 import os
@@ -27,10 +28,35 @@ def search_products(query):
     results = []
 
     # 1️⃣ Take first 5 results
+    def extract_expected_delivery(text):
+        if not text:
+            return "Not available"
+
+        text = text.lower()
+
+        if "tomorrow" in text:
+            return "Tomorrow"
+        if "same day" in text:
+            return "Today"
+        if "today" in text:
+            return "Today"
+        if "day" in text and "delivery in" in text:
+            return text.replace("delivery in", "").strip()
+
+        return text
+
     for item in data.get("shopping_results", []):
         store = item.get("source")
         price = item.get("price")
+        rating = item.get("rating") or "4.0"
         link = item.get("product_link") or item.get("link")
+        shipping = (
+        item.get("delivery")
+        or item.get("shipping")
+        or "Delivery info not available"
+        )
+        expected_delivery = extract_expected_delivery(shipping)
+        
 
         if not store or not price or not link:
             continue
@@ -43,10 +69,13 @@ def search_products(query):
             "store": store,
             "price": f"₹{num_price:,}",
             "price_value": num_price,
+            "rating": rating,
+            "shipping": shipping,
+            "expected_delivery": expected_delivery,
             "link": link
         })
 
-        if len(results) == 5:
+        if len(results) >= 10:
             break
 
     # If 0 or 1 item → return directly

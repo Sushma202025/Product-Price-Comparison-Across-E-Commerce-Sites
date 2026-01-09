@@ -1,255 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Compario - Upload Image</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Compario – Smart Price Comparison</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-        :root{
-            --accent:#42a5f5;
-            --card:#fff;
-            --muted:#666;
-            --green:#43a047;
-            --best-bg:#e8f5e9;
-        }
+<style>
+:root{
+  --primary:#4f46e5;
+  --success:#16a34a;
+  --muted:#6b7280;
+}
 
-        body{
-            margin:0;
-            padding:0;
-            font-family:"Segoe UI", Tahoma, sans-serif;
-            background: linear-gradient(135deg,#7e57c2,#42a5f5);
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:flex-start;
-            padding:30px 12px;
-            box-sizing:border-box;
-        }
+*{box-sizing:border-box}
 
-        .container{
-            width:100%;
-            max-width:520px;
-            background:var(--card);
-            border-radius:12px;
-            padding:26px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.12);
-        }
+html,body{
+  height:100%;
+  overflow:hidden;
+}
 
-        h1{
-            text-align:center;
-            margin:0 0 8px;
-            font-size:28px;
-            color:#333;
-        }
+body{
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-        p.lead{
-            text-align:center;
-            color:var(--muted);
-            margin:0 0 18px;
-        }
+.app{
+  width:95%;
+  max-width:1000px;
+  height:95vh;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+}
 
-        form{
-            text-align:center;
-        }
+/* HEADER */
+h1{
+  margin:0;
+  text-align:center;
+  color:var(--primary);
+  font-size:24px;
+}
 
-        .upload-text{
-            display:block;
-            border:2px dashed #ddd;
-            padding:18px;
-            border-radius:10px;
-            cursor:pointer;
-            color:#444;
-        }
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  margin:4px 0 10px;
+}
 
-        input[type=file]{
-            display:none;
-        }
+/* FEATURE CARDS WITH SMOOTH GRADIENT */
+.features{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
 
-        input[type=text]{
-            width:100%;
-            padding:10px;
-            border-radius:8px;
-            border:1px solid #ccc;
-            margin-top:14px;
-            box-sizing:border-box;
-        }
+.feature{
+  flex:1;
+  background: linear-gradient(135deg, #667eea, #764ba2); /* smooth gradient */
+  color: #fff;
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+  font-size:12px;
+  box-shadow:0 6px 12px rgba(0,0,0,.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
-        .btn{
-            margin-top:14px;
-            padding:10px 18px;
-            background:var(--accent);
-            color:#fff;
-            border:none;
-            border-radius:8px;
-            cursor:pointer;
-            width:100%;
-        }
+.feature span{
+  display:block;
+  font-size:18px;
+  margin-bottom:6px;
+}
 
-        .prediction-box{
-            margin-top:22px;
-            background:var(--best-bg);
-            border-left:6px solid var(--green);
-            padding:14px;
-            border-radius:8px;
-            text-align:center;
-            font-weight:600;
-        }
+.feature:hover{
+  transform: translateY(-4px);
+  box-shadow:0 10px 20px rgba(0,0,0,.2);
+}
 
-        .prediction-box small{
-            display:block;
-            margin-top:6px;
-            font-weight:400;
-            color:#2e7d32;
-        }
+/* FORM */
+.upload-box{
+  border:2px dashed #d1d5db;
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
+  font-size:13px;
+  cursor:pointer;
+}
 
-        .preview{
-            display:flex;
-            justify-content:center;
-            margin-top:16px;
-        }
+input[type=file]{display:none}
 
-        .preview img{
-            width:260px;
-            border-radius:12px;
-            box-shadow:0 8px 20px rgba(0,0,0,0.12);
-        }
+.btn{
+  width:100%;
+  margin-top:6px;
+  padding:8px;
+  border:none;
+  border-radius:8px;
+  background:var(--primary);
+  color:#fff;
+  font-size:13px;
+  font-weight:600;
+}
 
-        .prices{
-            margin-top:22px;
-            display:grid;
-            grid-template-columns:1fr;
-            gap:12px;
-        }
+/* BRAND */
+.brand-box{
+  margin:6px 0;
+  background:#ecfdf5;
+  border-left:4px solid var(--success);
+  padding:8px;
+  font-size:13px;
+  border-radius:6px;
+}
 
-        .price-card{
-            position:relative;
-            display:flex;
-            align-items:center;
-            gap:12px;
-            padding:12px;
-            border-radius:10px;
-            background:#fafafa;
-            box-shadow:0 4px 12px rgba(0,0,0,0.06);
-        }
+/* CONTENT */
+.content{
+  flex:1;
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:14px;
+}
 
-        .store-logo{
-            width:56px;
-            height:36px;
-            border-radius:6px;
-            background:#fff;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-weight:700;
-        }
+/* LEFT */
+.left{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-        .price-info{
-            flex:1;
-        }
+.preview img{
+  width:160px;
+  height:160px;
+  object-fit:contain;
+  border-radius:10px;
+  box-shadow:0 6px 12px rgba(0,0,0,.15);
+}
 
-        .price{
-            font-weight:700;
-            font-size:18px;
-        }
+/* RIGHT */
+.right{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
 
-        .buy{
-            text-decoration:none;
-            padding:8px 12px;
-            background:var(--accent);
-            color:#fff;
-            border-radius:8px;
-        }
+/* PRICE LIST (SCROLLABLE) */
+.prices{
+  flex:1; /* takes remaining space */
+  overflow-y:auto;
+  padding-right:6px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:10px;
+}
 
-        .best{
-            border:2px solid rgba(67,160,71,0.2);
-            background: linear-gradient(90deg,#f1fbf3,#fff);
-        }
+.card{
+  position:relative;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 5px 10px rgba(0,0,0,.08);
+  padding:10px;
+  font-size:12px;
+}
 
-        .best .price{
-            color:var(--green);
-        }
+.best{border:2px solid var(--success)}
 
-        .best-badge{
-            position:absolute;
-            top:-8px;
-            right:-8px;
-            background:#43a047;
-            color:#fff;
-            font-size:12px;
-            padding:4px 10px;
-            border-radius:14px;
-            font-weight:600;
-        }
+.badge{
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  background:var(--success);
+  color:#fff;
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:10px;
+}
 
-        @media (min-width:700px){
-            .prices{
-                grid-template-columns:1fr 1fr;
-            }
-        }
-    </style>
+.price{
+  font-weight:700;
+  color:var(--success);
+  margin:4px 0;
+}
+
+.buy{
+  display:block;
+  text-align:center;
+  margin-top:6px;
+  padding:5px;
+  background:var(--primary);
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  font-size:11px;
+}
+
+/* CHART (FIXED & CLEAN) */
+.chart-wrap{
+  height:150px;
+  margin-top:8px;
+  flex-shrink:0; /* keep chart fixed */
+}
+
+canvas{max-height:150px}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-<div class="container">
-    <h1>Compario</h1>
-    <p class="lead">Upload image → recognize brand → enter model → compare prices</p>
+<div class="app">
 
-    <!-- STEP 1: Upload image -->
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <label class="upload-text" for="imageInput">
-            <strong>Click to choose image</strong>
-        </label>
+<h1>Compario</h1>
+<p class="subtitle">Upload → Recognize → Compare → Buy</p>
 
-        <input type="file" id="imageInput" name="image" accept="image/*" required>
-        <button class="btn" type="submit">Recognize Product</button>
-    </form>
+<div class="features">
+  <div class="feature"><span>📷</span>Image Recognition</div>
+  <div class="feature"><span>🛒</span>Multi-Store Prices</div>
+  <div class="feature"><span>💰</span>Lowest Price Highlight</div>
+  <div class="feature"><span>📊</span>Visual Comparison</div>
+</div>
 
-    {% if label %}
-        <div class="prediction-box">
-            Predicted Brand: <strong>{{ label }}</strong> 
-        </div>
+<form method="POST" enctype="multipart/form-data">
+  <label class="upload-box">
+    Click to upload product image
+    <input type="file" name="image" required>
+  </label>
+  <button class="btn">Recognize Product</button>
+</form>
 
-        <div class="preview">
-            <img src="{{ image_url }}">
-        </div>
+{% if label %}
+<div class="brand-box">Predicted Brand: <strong>{{ label }}</strong></div>
 
-        <!-- STEP 2: Enter model -->
-        <form action="/" method="POST" style="margin-top:18px;">
-            <input type="hidden" name="brand" value="{{ label }}">
-            <input type="hidden" name="image_url" value="{{ image_url }}">
-            <input type="text"
-                   name="model_name"
-                   placeholder="Enter model (e.g. Galaxy M34, iPhone 14)"
-                   required>
+<div class="content">
 
-            <button class="btn" type="submit">Compare Prices</button>
-        </form>
-    {% endif %}
+<!-- LEFT -->
+<div class="left">
+  <div class="preview">
+    <img src="{{ image_url }}">
+  </div>
 
-    {% if prices %}
-        <h3 style="text-align:center;margin-top:20px;">Live Price Comparison</h3>
+  <form method="POST">
+    <input type="hidden" name="brand" value="{{ label }}">
+    <input type="hidden" name="image_url" value="{{ image_url }}">
+    <input class="btn" style="background:#06b6d4" type="text"
+           name="model_name" placeholder="Enter model" required>
+    <button class="btn">Compare</button>
+  </form>
+</div>
 
-        <div class="prices">
-            {% for p in prices %}
-            {% set is_best = (best_store and p.price_value == best_store.price_value) %}
-            <div class="price-card {% if is_best %}best{% endif %}">
-                {% if is_best %}
-                    <span class="best-badge">Lowest Price</span>
-                {% endif %}
+<!-- RIGHT -->
+<div class="right">
 
-                <div class="store-logo">{{ p.store }}</div>
+<div class="prices">
+{% for p in prices %}
+{% set best = (best_store and p.price_value == best_store.price_value) %}
+<div class="card {% if best %}best{% endif %}">
+{% if best %}<span class="badge">Lowest</span>{% endif %}
+<strong>{{ p.store }}</strong>
+<div class="price">₹{{ p.price_value }}</div>
+<div>{{ p.shipping }}</div>
+<div>{{ p.rating }} ⭐</div>
+<div><strong>Expected:</strong> {{ p.expected_delivery }}</div>
+<a class="buy" href="{{ p.link }}" target="_blank">Buy</a>
+</div>
+{% endfor %}
+</div>
 
-                <div class="price-info">
-                    <div><strong>{{ p.store }}</strong></div>
-                    <div class="price">₹{{ p.price_value }}</div>
-                </div>
+<div class="chart-wrap">
+  <canvas id="priceChart"></canvas>
+</div>
 
-                <a href="{{ p.link }}" target="_blank" class="buy">Buy</a>
-            </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+</div>
+</div>
+
+<script>
+const labels=[{% for p in prices %}'{{ p.store }}',{% endfor %}];
+const data=[{% for p in prices %}{{ p.price_value }},{% endfor %}];
+const min=Math.min(...data);
+
+new Chart(priceChart,{
+  type:'bar',
+  data:{labels,
+    datasets:[{
+      data,
+      backgroundColor:data.map(v=>v===min?
+        'rgba(22,163,74,.7)':'rgba(79,70,229,.7)'),
+      borderRadius:4
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:true}}
+  }
+});
+</script>
+{% endif %}
+
 </div>
 </body>
 </html>

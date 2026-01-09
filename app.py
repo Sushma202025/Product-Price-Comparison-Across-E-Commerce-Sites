@@ -142,7 +142,7 @@ def upload_file():
         model_name = request.form.get("model_name")
         image_url = request.form.get("image_url")
         if label and model_name:
-            query = f"{label} {model_name} smartphone Amazon Flipkart Croma"
+            query = f"{label} {model_name} smartphone Amazon Flipkart Croma Myntra JioMart Reliance Electronics vijaysales  etc"
             prices, best_store = search_products(query)
 
     return render_template(
